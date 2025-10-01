@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Make A Wish - Wishlist</title>
+
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #ffd6ec, #ffe7f3, #d6f0ff, #e4ffd6);
+        background-size: 400% 400%;
+        animation: gradientBG 10s ease infinite;
+        padding: 20px;
+        color: #444;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        gap: 15px;
+      }
+
+      header img {
+        height: 80px;
+        width: auto;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+
+      .btn-share {
+        background: #9de0ff;
+        color: #333;
+        padding: 12px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+      }
+      .btn-share:hover {
+        background: #b7f0ff;
+        transform: scale(1.05);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: #ff8bb3;
+        text-shadow: 1px 1px 3px rgba(255, 171, 210, 0.5);
+      }
+
+      /* Dropdown menu */
+      .dropdown {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 999;
+      }
+
+      .dropbtn {
+        background: #fff;
+        border: none;
+        border-radius: 50%;
+        padding: 12px;
+        cursor: pointer;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #ff4b9f;
+      }
+
+      .dropbtn:hover {
+        transform: scale(1.1) rotate(5deg);
+        background: #ff4b9f;
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(255, 75, 159, 0.3);
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        margin-top: 10px;
+        background: rgba(255, 255, 255, 0.95);
+        min-width: 160px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: #ff4b9f;
+        padding: 12px 20px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        font-weight: 600;
+      }
+
+      .dropdown-content a:hover {
+        background: #ff4b9f;
+        color: #fff;
+      }
+
+      /* Wishlist cards */
+      .wishlist-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+      }
+
+      .wishlist-item {
+        width: 300px;
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .wishlist-item:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 15px 30px rgba(255, 140, 180, 0.3);
+      }
+
+      .wishlist-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 3px solid #ff8bb3;
+      }
+
+      .wishlist-info {
+        padding: 15px;
+        text-align: left;
+      }
+
+      .wishlist-info h3 {
+        margin: 0 0 8px;
+        color: #ff4b9f;
+        font-size: 1.2rem;
+      }
+
+      .wishlist-info p {
+        margin: 5px 0;
+        color: #555;
+        font-size: 0.95rem;
+      }
+
+      .wishlist-info a {
+        display: inline-block;
+        margin-top: 10px;
+        color: #fff;
+        background: #ff4b9f;
+        padding: 8px 14px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .wishlist-info a:hover {
+        background: #ff7fb5;
+        transform: scale(1.05);
+      }
+
+      /* Toast popup */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #ff9dcf;
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 50px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+        font-weight: 600;
+        z-index: 999;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Dropdown menu -->
+    <div class="dropdown">
+      <button class="dropbtn" id="dropdownBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="dropdown-content" id="dropdownContent">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="form.html"><i class="fas fa-plus-circle"></i> Add Wish</a>
+      </div>
+    </div>
+
+    <header>
+      <img src="logo.png" alt="Make A Wish Logo" />
+      <h1>My Wishlist</h1>
+    </header>
+    <button id="shareBtn" class="btn-share">Share Wishlist</button>
+
+    <div class="wishlist-container" id="wishlistContainer"></div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">🎉 Wishlist link copied!</div>
+
+    <script>
+      // Dropdown toggle
+      const dropdownBtn = document.getElementById('dropdownBtn')
+      const dropdownContent = document.getElementById('dropdownContent')
+
+      dropdownBtn.addEventListener('click', () => {
+        dropdownContent.style.display =
+          dropdownContent.style.display === 'block' ? 'none' : 'block'
+      })
+
+      // Close dropdown if clicked outside
+      window.addEventListener('click', (e) => {
+        if (
+          !dropdownBtn.contains(e.target) &&
+          !dropdownContent.contains(e.target)
+        ) {
+          dropdownContent.style.display = 'none'
+        }
+      })
+
+      // Load wishlist from localStorage
+      function loadWishlist() {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || []
+        const container = document.getElementById('wishlistContainer')
+        container.innerHTML = ''
+        if (wishlist.length === 0) {
+          container.innerHTML = '<p>Your wishlist is empty.</p>'
+          return
+        }
+        wishlist.forEach((item) => {
+          const card = document.createElement('div')
+          card.className = 'wishlist-item'
+          card.innerHTML = `
+            <img src="${item.image}" alt="${item.name}">
+            <div class="wishlist-info">
+              <h3>${item.name}</h3>
+              <p><strong>Price:</strong> ${item.price}</p>
+              <p><strong>Need:</strong> ${item.need}</p>
+              <a href="${item.url}" target="_blank">View Product</a>
+            </div>
+          `
+          container.appendChild(card)
+        })
+      }
+
+      window.onload = loadWishlist
+
+      const shareBtn = document.getElementById('shareBtn')
+      const toast = document.getElementById('toast')
+
+      shareBtn.addEventListener('click', () => {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || []
+        if (wishlist.length === 0) {
+          alert('Your wishlist is empty!')
+          return
+        }
+
+        // Convert wishlist to string & encode
+        const wishlistStr = encodeURIComponent(JSON.stringify(wishlist))
+        const shareLink = `${window.location.origin}/share.html?data=${wishlistStr}`
+
+        // Copy to clipboard & show toast
+        navigator.clipboard.writeText(shareLink).then(() => {
+          toast.classList.add('show')
+          setTimeout(() => {
+            toast.classList.remove('show')
+          }, 3000)
+        })
+      })
+    </script>
+  </body>
+</html>

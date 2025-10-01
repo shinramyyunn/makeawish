@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shared Wishlist</title>
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        padding: 20px;
+        background: linear-gradient(135deg, #ffd6ec, #ffe7f3, #d6f0ff, #e4ffd6);
+        background-size: 400% 400%;
+        animation: gradientBG 10s ease infinite;
+        min-height: 100vh;
+        color: #444;
+      }
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #ff4b9f;
+      }
+      .wishlist-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+      }
+      .wishlist-item {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+      .wishlist-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 3px solid #ff8bb3;
+      }
+      .wishlist-info {
+        padding: 15px;
+      }
+      .wishlist-info h3 {
+        margin: 0 0 8px;
+        color: #ff4b9f;
+        font-size: 1.2rem;
+      }
+      .wishlist-info p {
+        margin: 5px 0;
+        color: #555;
+      }
+      .wishlist-info a {
+        display: inline-block;
+        margin-top: 10px;
+        color: #fff;
+        background: #ff4b9f;
+        padding: 8px 14px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .wishlist-info a:hover {
+        background: #ff7fb5;
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎁 Shared Wishlist</h1>
+    <div class="wishlist-container" id="wishlistContainer"></div>
+
+    <script>
+      function loadSharedWishlist() {
+        const params = new URLSearchParams(window.location.search)
+        const data = params.get('data')
+        if (!data) return
+
+        const wishlist = JSON.parse(decodeURIComponent(data))
+        const container = document.getElementById('wishlistContainer')
+
+        if (wishlist.length === 0) {
+          container.innerHTML = '<p>This wishlist is empty.</p>'
+          return
+        }
+
+        wishlist.forEach((item) => {
+          const card = document.createElement('div')
+          card.className = 'wishlist-item'
+          card.innerHTML = `
+        <img src="${item.image}" alt="${item.name}">
+        <div class="wishlist-info">
+          <h3>${item.name}</h3>
+          <p><strong>Price:</strong> ${item.price}</p>
+          <p><strong>Need:</strong> ${item.need}</p>
+          <a href="${item.url}" target="_blank">View Product</a>
+        </div>
+      `
+          container.appendChild(card)
+        })
+      }
+
+      window.onload = loadSharedWishlist
+    </script>
+  </body>
+</html>
